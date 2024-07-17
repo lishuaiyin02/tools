@@ -1,0 +1,46 @@
+<!--pages/my/my.wxml-->
+<view wx:if="{{!hasUserInfo && canIUse}}">
+	<view class='header'>
+		<image src='../../images/touxiang.png'></image>
+	</view>
+	<view class='content'>
+		<view class="zhushi">主要是为了服务没有留言功能的公众号的一款小程序,为了更好的体验留言功能</view>
+		<!-- <view>为了更好的体验留言功能</view> -->
+		<view>申请获取以下权限</view>
+		<text>获得你的公开信息(昵称，头像等)</text>
+	</view>
+	<!-- <button class='bottom' type='primary' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="bindGetUserInfo"> -->
+	<button class='bottom' wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo">开始使用 </button>
+</view>
+
+<block wx:else>
+	<view class='center-space'></view>
+	<view class='userinfo' bindtap="bindViewTap">
+		<image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+		<view>
+			<text class="userinfo-nickname">{{userInfo.nickName}}</text>
+		</view>
+	</view>
+
+	<view class='space'></view>
+	<view class="houtai" bindtap="showModal"> 后台管理</view>
+	<view class='center-space'></view>
+	<view class="houtai" bindtap="join"> 我要加入</view>
+	<view class='center-space'></view>
+	<view class="houtai" bindtap="introduce"> 使用说明</view>
+  <view class='center-space'></view>
+	<view class="houtai" bindtap="getopenID"> 获得OPENID</view>
+	<!-- <button class='bottom' type='primary' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="bindGetUserInfo"> -->
+	<button class='bottom' open-type="contact" bindtap="autoreply">联系我 </button>
+
+</block>
+
+<view>
+	<modal title="后台登录" style='color: #000;font-size: 32rpx;' hidden="{{modalHidden}}" confirm-text="确定" cancel-text="取消" bindconfirm="modalBindaconfirm" bindcancel="modalBindcancel">
+		<view class='reply-content'>只有管理员才能进行登录，您的ip地址已记录。</view>
+		<view class="control-password">
+			<input type="{{show}}" bindinput='getInputContent' class='reply-input' placeholder='请输入密码' value='{{inputContent}}' placeholder-style='font-size: 32rpx;'></input>
+			<image class='showImg' bindtap='showPassword' src="{{isPassword ? '../../images/close.png' : '../../images/open.png' }}"></image>
+		</view>
+	</modal>
+</view>

@@ -1,0 +1,109 @@
+const app = getApp();
+
+Page({
+  data: {
+    fileName: '',
+    filePath: '',
+    fileID: '',
+    processedFileID: ''
+  },
+  chooseFile: function() {
+    wx.chooseMessageFile({
+      count: 1,
+      type: 'file',
+      success: (res) => {
+        const tempFile = res.tempFiles[0];
+        this.setData({
+          fileName: tempFile.name,
+          filePath: tempFile.path,
+          processedFileID: ''
+        });
+      },
+      fail: (err) => {
+        console.error('文件选择失败:', err);
+      }
+    });
+  },
+  processFile: function(event) {
+    const action = event.currentTarget.dataset.action;
+    if (this.data.filePath) {
+      // 上传文件到云存储
+      wx.cloud.uploadFile({
+        cloudPath: `uploads/${Date.now()}-${this.data.fileName}`,
+        filePath: this.data.filePath,
+        success: res => {
+          this.setData({ fileID: res.fileID });
+          // test 下载文件
+          const filePath =`${wx.env.USER_DATA_PATH}/111.pdf`
+          wx.cloud.downloadFile({
+            fileID: res.fileID,
+            success: function (res) {
+               console.log(res); 
+               wx.getFileSystemManager().saveFile({
+                  tempFilePath: res.tempFilePath,
+                  filePath: filePath,
+                  success: function (res_) {
+                    console.log(res_);
+                    console.log("filePath is",filePath);
+                    wx.openDocument({
+                      filePath: res_.savedFilePath,
+                      showMenu:true,
+                    })
+                  },
+                  fail: function (err) {
+                    console.log(err);
+                  }
+                })
+            }
+          })
+          // 调用云函数处理文件
+          wx.cloud.callFunction({
+            name: 'fileHandler',
+            data: {
+              fileID: res.fileID,
+              action: action
+            },
+            success: res => {
+              console.log('文件处理成功:', res.result);
+              this.setData({ processedFileID: res.result.fileID });
+            },
+            fail: err => {
+              console.error('文件处理失败:', err);
+            }
+          });
+        },
+        fail: err => {
+          console.error('文件上传失败:', err);
+        }
+      });
+    } else {
+      wx.showToast({
+        title: '请先选择文件',
+        icon: 'none'
+      });
+    }
+  },
+  downloadFile: function() {
+    if (this.data.processedFileID) {
+      wx.cloud.downloadFile({
+        fileID: this.data.processedFileID,
+        success: res => {
+          wx.openDocument({
+            filePath: res.tempFilePath,
+            success: () => {
+              console.log('打开文档成功');
+            }
+          });
+        },
+        fail: err => {
+          console.error('文件下载失败:', err);
+        }
+      });
+    } else {
+      wx.showToast({
+        title: '请先处理文件',
+        icon: 'none'
+      });
+    }
+  }
+});

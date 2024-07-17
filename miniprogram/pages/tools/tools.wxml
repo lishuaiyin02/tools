@@ -1,0 +1,11 @@
+<view class="container">
+  <button bindtap="chooseImage">选择照片</button>
+  <text>{{imageFileName}}</text>
+  <button bindtap="compressImage">压缩照片</button>
+  <button bindtap="downloadImage" wx:if="{{compressedImageFilePath}}">下载压缩照片</button>
+
+  <button bindtap="choosePDF">选择PDF文件</button>
+  <text>{{pdfFileName}}</text>
+  <button bindtap="compressPDF">压缩PDF文件</button>
+  <button bindtap="downloadPDF" wx:if="{{compressedPdfFilePath}}">下载压缩PDF文件</button>
+</view>

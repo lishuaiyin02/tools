@@ -1,0 +1,93 @@
+<!--index.wxml-->
+<import src="/wxSearch/wxSearch.wxml"/>
+<template is="wxSearch" data="{{wxSearchData}}"/>
+<import src="../../wxSearch/wxSearch.wxml"  />
+
+
+
+<template is="wxSearch" data="{{wxSearchData}}"  />
+
+<view wx:if="{{!hasUserInfo && canIUse}}">
+  <view class='header'>
+      <image src='../../images/touxiang.png'></image>
+  </view>
+  <view class='content'>
+      <view class="zhushi">主要是为了方便每日一题,为了方便学生随时随地学习知识</view>
+      <!-- <view>为了更好的体验留言功能</view> -->
+      <view>申请获取以下权限</view>
+      <text>获得你的公开信息(昵称，头像等)</text>
+  </view>
+    <!-- <button class='bottom' type='primary' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="bindGetUserInfo"> -->
+  <button class='bottom' wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo">开始使用 </button>
+</view>
+ 
+<block wx:else>
+<!-- 搜索框 -->
+<view class="weui-search-bar">
+    <view class="weui-search-bar__form">
+        <view class="weui-search-bar__box">
+            <icon class="weui-icon-search_in-box" bindtap="wxSearchFn" type="search"/>
+            <input type="text" class="weui-search-bar__input" placeholder="点击进行科目搜索" value="{{searchinfo}}"
+                   bindfocus="wxSerchFocus" bindinput="wxSearchInput" bindblur="wxSearchBlur"  />
+            <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+                <icon type="clear" size="14"></icon>
+            </view>
+        </view>
+    </view>
+</view>
+    <view class='center-space'></view>
+
+      <view class='center-space-gong'></view>
+      <!-- 科目信息 -->
+      <view class='gong-content' bindtap='to_articel_list' data-index="Englishi" bindlongtap='copy' bindtouchend="touchend">
+       
+        <view class='gong-message'>
+          <view class='gong-name'>英语</view>
+          <view class='gong-describe'>背诵十个单词</view>
+          <text selectable='true'></text>
+        </view>
+      </view>
+       <!-- 科目信息 -->
+      <view class='gong-content' bindtap='to_articel_list' data-index="poetry" bindlongtap='copy' bindtouchend="touchend">
+        <view class='gong-message'>
+          <view class='gong-name'>背古诗</view>
+          <view class='gong-describe'>诗词一首</view>
+          <text selectable='true'></text>
+        </view>
+      </view>
+      <view class='gong-content' bindtap='to_articel_list' data-index="Chinese12" bindlongtap='copy' bindtouchend="touchend">
+        <view class='gong-message'>
+          <view class='gong-name'>语文12</view>
+          <view class='gong-describe'>语文一二年级</view>
+          <text selectable='true'></text>
+        </view>
+      </view>
+      <view class='gong-content' bindtap='to_articel_list' data-index="Chinese34" bindlongtap='copy' bindtouchend="touchend">
+        <view class='gong-message'>
+          <view class='gong-name'>语文34</view>
+          <view class='gong-describe'>语文三四年级</view>
+          <text selectable='true'></text>
+        </view>
+      </view>
+
+      <view class='gong-content' bindtap='to_articel_list' data-index="math12" bindlongtap='copy' bindtouchend="touchend">
+        <view class='gong-message'>
+          <view class='gong-name'>数学12</view>
+          <view class='gong-describe'>数学一二年级</view>
+          <text selectable='true'></text>
+        </view>
+      </view>
+
+      <view class='gong-content' bindtap='to_articel_list' data-index="math34" bindlongtap='copy' bindtouchend="touchend">
+        <view class='gong-message'>
+          <view class='gong-name'>数学34</view>
+          <view class='gong-describe'>数学三四年级</view>
+          <text selectable='true'></text>
+        </view>
+      </view>
+  </block>
+<view>
+  <modal title="后台登录" style='color: #000;font-size: 32rpx;' hidden="{{modalHidden}}" confirm-text="确定" cancel-text="取消" bindconfirm="modalBindaconfirm" bindcancel="modalBindcancel">
+  <view class='reply-content' >只有管理员才能进行登录，您的ip地址已记录。</view>
+  <input bindinput='getInputContent' class='reply-input' placeholder='请输入密码' value='{{inputContent}}' placeholder-style='font-size: 32rpx;'></input></modal>
+</view>
